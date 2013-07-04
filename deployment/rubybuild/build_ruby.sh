@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ruby_ver="1.9.3-p385"
+ruby_ver="2.0.0-p247"
 whereami="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 vnet_path="$( cd $whereami/../.. && pwd )"
 ruby_install_dir=${ruby_install_dir:-$vnet_path/ruby}
