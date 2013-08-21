@@ -1,22 +1,16 @@
 CURDIR ?= $(PWD)
-RUBYDIR = $(CURDIR)/ruby/current
 #An empty string for DSTDIR will install Wakame-VNet under /opt/axsh/wakame-vnet
 DSTDIR ?= ""
 
-all: build-ruby install-bundle
+all: build-script-warning
 
-dev: build-ruby install-bundle-dev update-config
+dev: install-bundle-dev update-config
 
-build-ruby:
-	ruby_ver=$(RUBY_VERSION) $(CURDIR)/deployment/rubybuild/build_ruby.sh
-
-install-bundle:
-	$(RUBYDIR)/bin/gem install bundler
-	(cd $(CURDIR)/vnet; $(RUBYDIR)/bin/bundle install --path vendor/bundle --without development test)
+build-script-warning:
+	$(error Use build.sh or call make with targets instead)
 
 install-bundle-dev:
-	$(RUBYDIR)/bin/gem install bundler
-	(cd $(CURDIR)/vnet; $(RUBYDIR)/bin/bundle install --path vendor/bundle)
+	(cd $(CURDIR)/vnet; bundle install --path vendor/bundle)
 
 install: update-config
 	mkdir -p $(DSTDIR)/opt/axsh/wakame-vnet
@@ -24,7 +18,7 @@ install: update-config
 	mkdir -p $(DSTDIR)/var/run/wakame-vnet/log
 	mkdir -p $(DSTDIR)/var/run/wakame-vnet/pid
 	mkdir -p $(DSTDIR)/var/run/wakame-vnet/sock
-	cp -r vnet vnctl ruby deployment $(DSTDIR)/opt/axsh/wakame-vnet
+	cp -r vnet vnctl deployment $(DSTDIR)/opt/axsh/wakame-vnet
 
 
 uninstall: remove-config
@@ -51,7 +45,6 @@ remove-config:
 	rm $(DSTDIR)/etc/init/vnet-webapi.conf
 
 clean:
-	rm -rf $(RUBYDIR)
 	rm -rf $(CURDIR)/vnet/vendor
 	rm -rf $(CURDIR)/vnet/.bundle
 
