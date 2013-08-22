@@ -2,6 +2,10 @@
 
 BASE=$(cd $(dirname $0) && /bin/pwd)
 
+BUILD_DEPS="wakame-vdc-ruby make git gcc gcc-c++ zlib-devel openssl-devel
+zeromq-devel openssl-devel zeromq-devel mysql-devel sqlite-devel libpcap-devel"
+USAGE_DEPS="redis mysql-server upstart"
+
 err() { echo 1>&2 "ERROR: $@"; exit 1; }
 
 mode=$1
@@ -20,14 +24,12 @@ function reset_db() {
 
 
 case ${mode} in
-  install-deps::rhel)
-    yum install -y install wakame-vdc-ruby redis mysql-server \
-    make git gcc gcc-c++ zlib-devel openssl-devel zeromq-devel \
-    mysql-devel sqlite-devel libpcap-devel
+  install-deps-rhel)
+    yum install -y install $BUILD_DEPS $USAGE_DEPS
     BUILD_OK=true
     ;;
-  install)
-    make install
+  dev-setup)
+    make update-config
     reset_db
     BUILD_OK=true
     ;;
