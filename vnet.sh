@@ -22,6 +22,15 @@ function reset_db() {
   bundle exec rake db:migrate
 }
 
+function print_usage {
+  echo "Commands:
+    $0 install-deps-rhel   # Installs rhel dependencies for Wakame-VNet.
+    $0 dev-setup           # Installs config files, upstart jobs and resets the database.
+    $0 reset-db            # Resets the database.
+    $0 bundle              # Installs the gems bundle for Wakame-VNet.
+  "
+}
+
 
 case ${mode} in
   install-deps-rhel)
@@ -42,6 +51,7 @@ case ${mode} in
     BUILD_OK=true
     ;;
   *)
-    BUILD_ERR="Unknown option: ${mode}"
+    BUILD_ERR="Unknown command: ${mode}"
+    print_usage
     ;;
 esac
