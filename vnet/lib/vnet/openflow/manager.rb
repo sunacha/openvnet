@@ -179,6 +179,17 @@ module Vnet::Openflow
           error e.backtrace
         end
       end
+      async.wait_for_events
+    end
+
+    def wait_for_events
+      loop do
+        receive do |message|
+          message[:method] == :handle_event && self.class.events.member?(message[:event])
+        end.tap do |message|
+          __send__(message[:method], message[:event], *message[:args])
+        end
+      end
     end
 
     #
